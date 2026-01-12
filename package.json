@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Telegram Mini App for Dubai Real Estate Agents - AI-powered 3D renders and marketing texts",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -21,7 +21,6 @@
   "dependencies": {
     "@twa-dev/sdk": "^7.0.0",
     "axios": "^1.6.2",
-    "express": "^4.18.2",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.303.0",
     "react": "^18.2.0",
