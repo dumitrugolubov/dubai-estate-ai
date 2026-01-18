@@ -70,7 +70,13 @@ const NewProject = () => {
   })
 
   const handleNext = () => { if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1) }
-  const handleBack = () => { if (currentStep > 0) setCurrentStep(currentStep - 1) else navigate(-1) }
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    } else {
+      navigate(-1)
+    }
+  }
 
   const handleSubmit = async () => {
     showAlert('Демо-режим: Проект сохранен локально')
