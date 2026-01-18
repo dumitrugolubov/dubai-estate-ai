@@ -59,7 +59,7 @@ Write 2-3 paragraphs that sell this property. Use emotional words, highlight Dub
         'X-Title': 'DubaiEstate AI'
       },
       body: JSON.stringify({
-        model: 'google/gemini-3-flash',
+        model: 'google/gemini-3-flash-preview',
         messages: [
           {
             role: 'system',
@@ -103,7 +103,7 @@ export const generate3DRender = async (imageUrl, style = 'modern') => {
       scandinavian: 'Scandinavian Dubai apartment, light wood, cozy textiles, natural light, functional design, warm atmosphere'
     }
 
-    const response = await fetch(`${OPENROUTER_API_URL}/images/generations`, {
+    const response = await fetch(`${OPENROUTER_API_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -112,10 +112,15 @@ export const generate3DRender = async (imageUrl, style = 'modern') => {
         'X-Title': 'DubaiEstate AI'
       },
       body: JSON.stringify({
-        model: 'nano-banana/pro',
-        prompt: `Transform this floor plan into a beautiful 3D interior render in ${style} style. ${stylePrompts[style] || stylePrompts.modern}. Make it photorealistic, well-lit, professional architectural visualization. Dubai real estate.`,
-        n: 1,
-        size: '1024x1024'
+        model: 'google/gemini-3-pro-image-preview',
+        messages: [
+          {
+            role: 'user',
+            content: `Transform this floor plan into a beautiful 3D interior render in ${style} style. ${stylePrompts[style] || stylePrompts.modern}. Make it photorealistic, well-lit, professional architectural visualization. Dubai real estate.`
+          }
+        ],
+        modalities: ['image', 'text'],
+        max_tokens: 1000
       })
     })
 
@@ -124,7 +129,12 @@ export const generate3DRender = async (imageUrl, style = 'modern') => {
     }
 
     const data = await response.json()
-    return data.data[0].url
+    // Response format: data.choices[0].message.images[0] (base64 data URL)
+    const imageData = data.choices[0].message.images?.[0]
+    if (!imageData) {
+      throw new Error('No image in response')
+    }
+    return imageData
   } catch (error) {
     console.error('Error generating image:', error)
     return generateMockImageUrl(style)
